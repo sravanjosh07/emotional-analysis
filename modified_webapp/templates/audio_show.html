@@ -1,0 +1,75 @@
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/static/CSS/style.css">
+    <title>Audio Surveillance</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"> </script>
+
+  </head>
+
+  <body>
+
+    <h1 style = 'background-color: 45AF7F; color:FFFFFF;'> Audio Interview </h1>
+
+
+  <div class="row">
+  <div class="column" id="left-col" align="center">
+    <img style = " width:900px ; height:520px; "   src="{{ url_for('audio_recording') }}">
+
+
+  <div class= "bottomright" id="left-col" align="center" style = 'padding-right: 60px '>
+    <form action="/audio_dash" method="post">
+      <input type="submit" name="stop_video" value="Stop Recording">
+    </form>
+    <br>
+    <br>
+    <br> <br> <br> <br> <br>
+    <br> <br>
+    <h3> Perceived Voice Emotions</h3>
+      <br>
+        <p>Your most frequent emotion is : </p>
+        <br>
+        <h4 id = "Youlook"> {{emo}}</h4>
+        <div class="parent">
+          <ul align="left">
+            <li>Anger : <a id = "anger"> {{anger}} </a> %</li>
+            <li>Disgust : <a id = "disgust">{{disgust}}  </a>%</li>
+            <li>Fear : <a id = "fear">{{fear}}  </a>%</li>
+            <li>Happy : <a id = "happiness">{{happiness}}  </a>%</li>
+            <li>Sad : <a id = "sadness">{{sadness}}  </a>%</li>
+            <li>Surprise : <a id = "surprise">{{surprise}}  </a>%</li>
+            <li>Neutral : <a id = "neutrality">{{neutrality}}  </a>%</li>
+        </div>
+      <br>
+    <br>
+    </div>
+  </div>
+  </div>
+
+
+  </body>
+  <script type="text/javascript">
+    setInterval(update_values, 30000);
+    function update_values(){
+
+      $url = {{request.script_root|tojson|safe}};
+      $.getJSON($url+"/audio_temp",
+      function(data) {
+        $("#Youlook").text(data.emo);
+        $("#anger").text(data.prob[0]);
+        $("#disgust").text(data.prob[1]);
+        $("#fear").text(data.prob[2]);
+        $("#happiness").text(data.prob[3]);
+        $("#sadness").text(data.prob[5]);
+        $("#surprise").text(data.prob[6]);
+        $("#neutrality").text(data.prob[4]);
+
+        } );
+
+    }
+
+
+  </script>
+
+</html>
